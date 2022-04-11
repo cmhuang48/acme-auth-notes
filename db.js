@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const faker = require('faker');
 const Sequelize = require('sequelize');
 const { STRING } = Sequelize;
 const config = {
@@ -59,6 +60,13 @@ User.authenticate = async({ username, password })=> {
   throw error;
 };
 
+const Note = conn.define('note', {
+  txt: STRING(1000)
+});
+
+Note.belongsTo(User);
+User.hasMany(Note);
+
 const syncAndSeed = async()=> {
   await conn.sync({ force: true });
   const credentials = [
@@ -69,11 +77,57 @@ const syncAndSeed = async()=> {
   const [lucy, moe, larry] = await Promise.all(
     credentials.map( credential => User.create(credential))
   );
+  const [one, two, three, four, five, six, seven, eight, nine, ten] = await Promise.all([
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()}),
+    Note.create({txt: faker.lorem.paragraph()})
+  ]);
+  one.userId = lucy.id;
+  two.userId = lucy.id;
+  three.userId = moe.id;
+  four.userId = moe.id;
+  five.userId = moe.id;
+  six.userId = larry.id;
+  seven.userId = moe.id;
+  eight.userId = larry.id;
+  nine.userId = lucy.id;
+  ten.userId = larry.id;
+  await Promise.all([
+    one.save(),
+    two.save(),
+    three.save(),
+    four.save(),
+    five.save(),
+    six.save(),
+    seven.save(),
+    eight.save(),
+    nine.save(),
+    ten.save()
+  ]);
   return {
     users: {
       lucy,
       moe,
       larry
+    },
+    notes: {
+      one, 
+      two, 
+      three,
+      four,
+      five,
+      six,
+      seven,
+      eight,
+      nine,
+      ten
     }
   };
 };
@@ -81,6 +135,7 @@ const syncAndSeed = async()=> {
 module.exports = {
   syncAndSeed,
   models: {
-    User
+    User,
+    Note
   }
 };

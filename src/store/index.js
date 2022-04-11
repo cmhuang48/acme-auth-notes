@@ -30,6 +30,7 @@ const signIn = (credentials)=> {
     return dispatch(attemptLogin());
   }
 };
+
 const attemptLogin = ()=> {
   return async(dispatch)=> {
     const token = window.localStorage.getItem('token');
