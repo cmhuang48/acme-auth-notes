@@ -1,16 +1,15 @@
 import React from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import { attemptLogin, logout } from './store';
+import { attemptLogin, loadNotes } from './store';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import Home from './Home';
 import Notes from './Notes';
 import SignIn from './SignIn';
 
-
 class App extends React.Component{
   componentDidMount(){
     this.props.attemptLogin();
+    this.props.loadNotes();
   }
   render(){
     const { auth } = this.props;
@@ -41,6 +40,9 @@ const mapDispatch = (dispatch)=> {
   return {
     attemptLogin: ()=> {
       return dispatch(attemptLogin());
+    },
+    loadNotes: ()=> {
+      return dispatch(loadNotes());
     }
   }
 }

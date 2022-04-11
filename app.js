@@ -29,7 +29,31 @@ app.get('/api/auth', async(req, res, next)=> {
 app.get('/api/notes', async(req, res, next)=> {
   try {
     const user = await User.byToken(req.headers.authorization);
-    res.send(await Note.filter(note => note.userId = user.id));
+    res.send(await Note.findAll({
+      where: {
+        userId: user.id
+      }
+    }));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
+app.delete('/api/notes/:id', async(req, res, next)=> {
+  try {
+    const note = await Note.findByPk(req.params.id);
+    await note.destroy();
+    res.sendStatus(204);
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
+app.post('/api/notes', async(req, res, next)=> {
+  try {
+    res.status(201).send(await Note.create(req.body));
   }
   catch(ex){
     next(ex);
