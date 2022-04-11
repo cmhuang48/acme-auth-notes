@@ -15,6 +15,7 @@ class CreateNote extends React.Component {
     const { txt } = this.state;
     ev.preventDefault();
     this.props.createNote(txt);
+    this.setState({ txt: '' });
   }
   onChange (ev) {
     const change = {};
