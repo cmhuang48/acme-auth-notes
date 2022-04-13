@@ -18,8 +18,7 @@ class App extends React.Component{
     if(!auth.id){
       return (
         <Switch>
-          <Route path='/signin' component={ SignIn } />
-          <Redirect to='/signin' />
+          <Route path='/' component={SignIn} />
         </Switch>
       );
     }
