@@ -80,11 +80,18 @@ const destroyNote = (note)=> {
 
 const createNote = (txt)=> {
   return async (dispatch)=> {
-    const note = (await axios.post('/api/notes', { txt })).data;
-    dispatch({
-      type: 'CREATE_NOTE',
-      note
-    });
+    const token = window.localStorage.getItem('token');
+    if(token){
+      const note = (await axios.post('/api/notes', { txt }, {
+        headers: {
+          authorization: token
+        }
+      })).data;
+      dispatch({
+        type: 'CREATE_NOTE',
+        note
+      });
+    }
   }
 };
 
