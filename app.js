@@ -42,7 +42,13 @@ app.get('/api/notes', async(req, res, next)=> {
 
 app.delete('/api/notes/:id', async(req, res, next)=> {
   try {
-    const note = await Note.findByPk(req.params.id);
+    const user = await User.byToken(req.headers.authorization);
+    const note = await Note.findOne({
+      where: {
+        id: req.params.id,
+        userId: user.id
+      }
+    });
     await note.destroy();
     res.sendStatus(204);
   }
